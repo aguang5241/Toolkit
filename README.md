@@ -2,7 +2,7 @@
 Some useful self-developed code
 
 ## optimize
-Useful optimization algorithm
+Some useful optimization algorithms
 ### GA
 Genetic algorithm
 * Binary encoding
