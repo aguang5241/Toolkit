@@ -9,5 +9,6 @@ Genetic algorithm
 * Elitist selection
 * One-point crossover
 * Adaptive mutation
-* Terminate the loop intelligently based on the precision value
+* Support precision control
+* Terminate the loop intelligently
 * Calculation saving design
