@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # -*-coding:utf-8 -*-
 
+import seaborn as sns
+import matplotlib.pyplot as plt
+import matplotlib
 from numpy.random import randint, rand, choice
 import numpy as np
 
@@ -79,9 +82,8 @@ class GA():
 
     def selection(self, only_sort=True):
         '''
-        Elitist selection: keep the best one without crossover and mutation
+        Elitist selection (modified): evaluate the fitness/loss and select the parent
         Steps:
-        * Evaluate the fitness/loss and select the parent
         * Sort the population based on fitness
         * Selection rate for each individual is based on the squence of sorted population
         * Return the selected individual as parent for next generation
@@ -109,6 +111,7 @@ class GA():
         * Crossover point shouldn't appear at both ends
         '''
         c_point = randint(2, self.gene_size - 1, 1)[0]
+        # print(f'crossover point: \n{c_point}')
         c1, c2 = parents[0].copy(), parents[1].copy()
         child1 = c1[:c_point] + c2[c_point:]
         child2 = c2[:c_point] + c1[c_point:]
@@ -131,6 +134,7 @@ class GA():
                 if m_point not in m_points:
                     m_points.append(m_point)
                     n += 1
+            # print(f'mutation points: \n{m_points}')
             for i, c in enumerate(child):
                 if i in m_points:
                     if c == 1:
@@ -150,6 +154,12 @@ class GA():
         self.X = self.decode(self.pop)
         self.Y = [self.func(s) for s in self.X]
         total_cal = self.pop_size
+        # data for visualize
+        x_real = np.linspace(0, 10, 1000)
+        y_real = software(x_real).tolist()
+        x_real = x_real.tolist()
+        fig = plt.figure()
+        # GA iterations
         old_y = min(self.Y)
         for i in range(self.iter_max):
             self.res_iter = i + 1
@@ -167,6 +177,20 @@ class GA():
                break
             else:
                 old_y = new_y
+            # visualize the results
+            plt.clf()
+            sns.set(font_scale=0.8, style='ticks')
+            matplotlib.rcParams['xtick.direction'] = 'in'
+            matplotlib.rcParams['ytick.direction'] = 'in'
+            plt.plot(x_real, y_real, linestyle='dashed', zorder=1)
+            x_pre = np.array([x[0] for x in self.X])
+            plt.scatter(x_pre, software(x_pre), c='gray', zorder=2)
+            plt.scatter(self.X[0][0], software(self.X[0][0]), c='r', zorder=3)
+            plt.text(0, max(y_real) * 0.95, f'X: {self.X[0][0]}\nY: {software(self.X[0][0])}',
+                fontdict={'fontsize': 8, 'color': 'r', 'weight': 'bold'})
+            plt.pause(0.5)
+            plt.ioff()
+            # Create children with size same as population size - 1
             children = [parent_best]
             while True:
                 parent = self.selection(only_sort=False)
@@ -195,6 +219,50 @@ class GA():
                     self.Y[index] = y
             # update muation rate
             self.mutation_rate = self.mutation_rates[i]
+        plt.close()
         print(f'\nX: {self.X[0]}')
         print(f'Y: {self.Y[0]}')
         print(f'Actual / Maxmum calculations: {total_cal} / {self.pop_size * self.res_iter}\n')
+
+# %% main.py
+
+def software(x):
+    y = x + 10 * np.cos(5 * x) + 7 * np.sin(4 * x)
+    return y
+
+def call_software(x):
+    '''
+    Call the software and calculate the loss
+    '''
+    x = x[0]
+    y = software(x)
+    loss = (y - (-12.387779954714805))**2
+    return loss
+
+pop_size = 100
+iter_max = 20
+boundaries = [[0, 10]]
+
+precision = 1e-6
+target_prop = [4.66, 13.98, 23.3]
+
+for i in range(5):
+    ga = GA(call_software, pop_size, iter_max, boundaries, precision)
+    ga.run()
+    # visualize GA results
+    sns.set(font_scale=0.8, style='ticks')
+    matplotlib.rcParams['xtick.direction'] = 'in'
+    matplotlib.rcParams['ytick.direction'] = 'in'
+    fig, ax = plt.subplots(2, 1, dpi=330)
+    X = np.array([(np.ones(ga.pop_size) * (i + 1))
+                  for i in range(ga.res_iter)]).ravel()
+    ax[0].scatter(X, ga.res_Y, c='r', s=2)
+    ax[0].set_ylabel('Y')
+    X_min = np.linspace(1, ga.res_iter, ga.res_iter)
+    ax[1].plot(X_min, ga.res_Y_min, c='gray',
+               linestyle='dashed', linewidth=1, zorder=1)
+    ax[1].scatter(X_min, ga.res_Y_min, c='r', s=4, zorder=2)
+    ax[1].set_ylabel('Minimum Y')
+    ax[1].set_xlabel('Generations')
+    plt.savefig(f'res_{i + 1}.png')
+    plt.close()
