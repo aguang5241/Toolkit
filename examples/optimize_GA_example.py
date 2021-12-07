@@ -264,5 +264,5 @@ for i in range(5):
     ax[1].scatter(X_min, ga.res_Y_min, c='r', s=4, zorder=2)
     ax[1].set_ylabel('Minimum Y')
     ax[1].set_xlabel('Generations')
-    plt.savefig(f'res/res_{i + 1}.png')
+    plt.savefig(f'GA_{i + 1}.png')
     plt.close()
