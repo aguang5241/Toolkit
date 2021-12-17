@@ -12,3 +12,8 @@ Genetic algorithm
 * Support precision control
 * Terminate the loop intelligently
 * Calculation saving design
+
+## machine learning
+Some templates of machine learning
+### NN
+Nueral networks
