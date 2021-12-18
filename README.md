@@ -17,3 +17,8 @@ Genetic algorithm
 Some templates of machine learning
 ### NN
 Nueral networks
+
+## draw
+Some templates for drawing
+### ternary_draw
+Draw the ternary figure
