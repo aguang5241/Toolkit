@@ -41,6 +41,18 @@ def random_points(n, scale):
         p.append((x, y, z))
     return p
 
+def shannon_entropy(p):
+    '''
+    Computes the Shannon Entropy at a distribution in the simplex
+    '''
+    s = 0.
+    for i in range(len(p)):
+        try:
+            s += p[i] * math.log(p[i])
+        except ValueError:
+            continue
+    return -1.*s
+
 if __name__ == '__main__':
     # Boundary and Gridlines
     scale = 100 
@@ -76,9 +88,10 @@ if __name__ == '__main__':
     # data = random_points(30, scale=scale)
     # tax.scatter(data, marker='D', color='green', label="Green Diamonds")
 
-    # Heatmap
+    # Heatmap: dual-triangular; hexagonal; triangular
     # data = generate_heatmap_data(scale)
     # tax.heatmap(data, style="hexagonal", use_rgba=True)
+    # tax.heatmapf(shannon_entropy, boundary=True, style="triangular")
 
     # Show
     ternary.plt.show()
