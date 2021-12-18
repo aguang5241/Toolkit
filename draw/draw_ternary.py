@@ -64,6 +64,12 @@ if __name__ == '__main__':
     # Remove default Matplotlib Axes
     tax.clear_matplotlib_ticks()
 
+    # Remove default Matplotlib Spines
+    tax.get_axes().spines['top'].set_visible(False)
+    tax.get_axes().spines['bottom'].set_visible(False)
+    tax.get_axes().spines['left'].set_visible(False)
+    tax.get_axes().spines['right'].set_visible(False)
+
     # Scatter
     # data = random_points(30, scale=scale)
     # tax.scatter(data, marker='s', color='red', label="Red Squares")
