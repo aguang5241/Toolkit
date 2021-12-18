@@ -3,7 +3,7 @@ Some useful self-developed code
 
 ## optimize
 Some useful optimization algorithms
-### GA
+#### GA
 Genetic algorithm
 * Binary encoding
 * Elitist selection
@@ -15,10 +15,10 @@ Genetic algorithm
 
 ## machine learning
 Some templates of machine learning
-### NN
+#### NN
 Nueral networks
 
 ## draw
 Some templates for drawing
-### ternary_draw
+#### ternary_draw
 Draw the ternary figure
